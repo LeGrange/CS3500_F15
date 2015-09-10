@@ -19,6 +19,12 @@ namespace FormulaEvaluator
         /// <returns></returns>
         public delegate int Lookup(String s);
 
+        /// <summary>
+        /// This is the Evaluate Method
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="varEvaluator"></param>
+        /// <returns></returns>
         public static int Evaluate(String s, Lookup varEvaluator)
         {
             string[] substrings = Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
