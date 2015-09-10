@@ -28,6 +28,7 @@ namespace FormulaEvaluator
         public static int Evaluate(String s, Lookup varEvaluator)
         {
             string[] substrings = Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+            //should I change this?
 
             return 0;
         }
