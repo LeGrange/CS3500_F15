@@ -20,6 +20,16 @@ namespace FormulaEvaluator
         public delegate int Lookup(String s);
 
         /// <summary>
+        /// This is a stack that will contain the operators
+        /// </summary>
+        public Stack<double> operatorStack = new Stack<double>();
+
+        /// <summary>
+        /// This is a stack that will contain the numbers
+        /// </summary>
+        public Stack<int> numberStack = new Stack<int>();
+
+        /// <summary>
         /// This is the Evaluate Method
         /// </summary>
         /// <param name="s"></param>
@@ -27,9 +37,9 @@ namespace FormulaEvaluator
         /// <returns></returns>
         public static int Evaluate(String s, Lookup varEvaluator)
         {
+            //This helps to split strings to the proper operator.
             string[] substrings = Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
-            //should I change this?
-
+            
             return 0;
         }
 
