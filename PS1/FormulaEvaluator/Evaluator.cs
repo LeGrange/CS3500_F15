@@ -18,7 +18,7 @@ namespace FormulaEvaluator
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public delegate int Lookup(String s);
+        public delegate double Lookup(String s);
 
         
 
@@ -36,32 +36,46 @@ namespace FormulaEvaluator
             Stack<double> numberStack = new Stack<double>();
             try{
             //This helps to split strings to the proper operator.
-            string[] substrings = Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+            string[] substrings = Regex.Split(s, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)", RegexOptions.IgnorePatternWhitespace);
 
             //run through each string and do things to it.
+            //Lets populate the stacks here.
             foreach(String t in substrings)
             {
-                if (isVar(t))
+                if (isNum(t))
+                {
+                    double newNum = Double.Parse(t);
+                    string newOp = operatorStack.Peek();
+                    if (newOp.Equals("*") || newOp.Equals("/"))
+                    {
+                        numberStack.Pop();
+                        operatorStack.Pop();
+                        
+                    }
+                }
+                else if (isVar(t))
                 {
 
                 }
-                else if (isInt(t))
+                else if (isOp(t))
                 {
+                    if (operatorStack.Peek().Equals("+") || operatorStack.Peek().Equals("-"))
+                    {
+                        double x = numberStack.Pop();
+                        double y = numberStack.Pop();
+                        string poppedOp = operatorStack.Pop();
+                        if(poppedOp.Equals("+"))
+                        {
+                            x = x + y;
+                        } else
+                        {
+                            x = x - y;
+                        }
 
-                }
-                else if (isOP(t))
-                {
-
+                    }
                 }
             }
-            //if (substrings[i] is number)
-            //{
-            //    //put on number stack
-            //}
-            //else if(substrings[i] is operator)
-            //{
-            //    //put on operator stack
-            //}
+            
             }catch(ArgumentException){
 
             }
@@ -73,6 +87,49 @@ namespace FormulaEvaluator
             return Regex.IsMatch(v, "(^[a-z]|[A-Z]) + \\d+$");
         }
 
+        private static bool isNum(String v)
+        {
+            return Regex.IsMatch(v, "^[0-9]$");
+        }
+
+        private static bool isOp(String v)
+        {
+            return Regex.IsMatch(v, "\\(|\\)|-|\\+|\\*|/");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="number1">left operand</param>
+        /// <param name="number2">right operand</param>
+        /// <param name="opSign">operator sign</param>
+        /// <returns>the result of the operation</returns>
+        private static double Math(double number1, double number2, string opSign)
+        {
+            double result = 0.0;
+            switch (opSign)
+            {
+                case "*":
+                    result = number1 * number2;
+                    break;
+                case "/":
+                    if (number2 == 0)
+                    {
+                        throw new ArgumentException("ERROR: Can't divide by zero!");
+                    }
+                    result = number1 / number2;
+                    break;
+                case "+":
+                    result = number1 + number2;
+                    break;
+                case "-":
+                    result = number1 - number2;
+                    break;
+            }
+            return result;
+        }
+
+        
         
     }
 
