@@ -33,11 +33,13 @@ namespace SpreadsheetUtilities
     /// </summary>
     public class DependencyGraph
     {
+        public Dictionary<string, string> dependGraph;
         /// <summary>
         /// Creates an empty DependencyGraph.
         /// </summary>
         public DependencyGraph()
         {
+            dependGraph = new Dictionary<string, string>();
         }
 
 
@@ -46,7 +48,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int Size
         {
-            get { return 0; }
+            get { return dependGraph.Count; }
         }
 
 
@@ -68,7 +70,13 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependents(string s)
         {
-            return false;
+            try {
+                return true;
+            }catch(KeyNotFoundException){
+                Console.WriteLine("Key Not Found");
+                return false;
+            }
+            
         }
 
 
@@ -77,6 +85,14 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependees(string s)
         {
+            foreach (KeyValuePair<string, string> value in dependGraph)
+            {
+                if (value.Key == s)
+                {
+                    return true;
+                }
+                
+            }
             return false;
         }
 
