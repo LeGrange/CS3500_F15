@@ -73,6 +73,19 @@ namespace SpreadsheetUtilities
         /// </summary>
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
+            int count = formula.Length;
+            
+            try
+            {
+                foreach(String tokens in GetTokens(formula))
+                {
+
+                }
+            }catch(FormulaFormatException){
+                //catch exception
+
+            }
+
         }
 
         /// <summary>
