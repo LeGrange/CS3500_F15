@@ -37,7 +37,7 @@ namespace SpreadsheetUtilities
     public class Formula
     {
 
-        List<string> tokenList;
+        
         /// <summary>
         /// Creates a Formula from a string that consists of an infix expression written as
         /// described in the class comment.  If the expression is syntactically invalid,
@@ -79,10 +79,10 @@ namespace SpreadsheetUtilities
             int leftParen = 0, rightParen = 0;
             if(formula.Length > 0){
 
-                tokenList = GetTokens(formula).ToList();
+                string[] tokenList = GetTokens(formula).ToArray();
                 try
                 {
-                    if(isVar(tokenList.First()) || isNum(tokenList.First()) || tokenList.First() == "(")
+                    if(isVar(tokenList[0]) || isNum(tokenList[0]) || tokenList[0] == "(")
                         firstToken = true;     
                     else
                         throw new FormulaFormatException("First token is not valid: " + tokenList.First());
@@ -94,7 +94,7 @@ namespace SpreadsheetUtilities
 
                     if (firstToken && lastToken)
                     {
-                        for (int i = 0; i < tokenList.Count; i++)
+                        for (int i = 0; i < tokenList.Length; i++)
                         {
                             
                         }
