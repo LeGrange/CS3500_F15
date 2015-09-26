@@ -73,12 +73,45 @@ namespace SpreadsheetUtilities
         /// </summary>
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
-            int count = formula.Length;
+            int leftParenCount = 0, rightParenCount = 0, opCount = 0, varCount = 0, numCount = 0;
             
             try
             {
-                foreach(String tokens in GetTokens(formula))
+                foreach(String token in GetTokens(formula))
                 {
+                    
+                        switch (token)
+                        {
+                            case "(":
+                                leftParenCount++;
+                                break;
+                            case ")":
+                                rightParenCount++;
+                                break;
+                            case "*":
+                                opCount++;
+                                break;
+                            case "/":
+                                goto case "*";
+                            case "+":
+                                goto case "*";
+                            case "-":
+                                goto case "*";
+                            default:
+                                if (isVar(token))
+                                {
+                                    varCount++;
+                                }
+                                else if(isNum(token))
+                                {
+                                    numCount++;
+                                }
+                                break;
+                        }
+                        if (rightParenCount > leftParenCount)
+                        {
+                            throw new FormulaFormatException("Right Parentheses Rule");
+                        }
 
                 }
             }catch(FormulaFormatException){
@@ -225,6 +258,24 @@ namespace SpreadsheetUtilities
                 }
             }
 
+        }
+
+        public static bool isVar(String s)
+        {
+            return Regex.IsMatch(s, @"[a-zA-Z_](?: [a-zA-Z_]|\d)*");
+        }
+
+        public static bool isNum(String s)
+        {
+            double number;
+            if ((Double.TryParse(s, out number)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
