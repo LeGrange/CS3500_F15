@@ -96,7 +96,10 @@ namespace SpreadsheetUtilities
                     {
                         for (int i = 0; i < tokenList.Length; i++)
                         {
-                            
+                            if (rightParen != leftParen)
+                            {
+                                throw new FormulaFormatException("Right parentheses count exceeds that of the left.")
+                            }
                         }
                     }
 
