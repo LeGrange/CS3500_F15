@@ -75,16 +75,31 @@ namespace SpreadsheetUtilities
         /// </summary>
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
-            int leftParenCount = 0, rightParenCount = 0, opCount = 0, varCount = 0, numCount = 0;
+            bool firstToken = false, lastToken = false;
+            int leftParen = 0, rightParen = 0;
             if(formula.Length > 0){
 
                 tokenList = GetTokens(formula).ToList();
                 try
                 {
                     if(isVar(tokenList.First()) || isNum(tokenList.First()) || tokenList.First() == "(")
-                    {
+                        firstToken = true;     
+                    else
+                        throw new FormulaFormatException("First token is not valid: " + tokenList.First());
 
+                    if (isVar(tokenList.Last()) || isNum(tokenList.Last()) || tokenList.Last() == ")")
+                        lastToken = true;
+                    else
+                        throw new FormulaFormatException("Last token is not valid: " + tokenList.Last());
+
+                    if (firstToken && lastToken)
+                    {
+                        for (int i = 0; i < tokenList.Count; i++)
+                        {
+                            
+                        }
                     }
+
                 }catch(FormulaFormatException){
                     //catch exception
 
@@ -147,7 +162,12 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override string ToString()
         {
-            return null;
+            String returnString = "";
+            foreach (string s in tokenList)
+            {
+                returnString += s;
+            }
+            return returnString;
         }
 
         /// <summary>
