@@ -100,6 +100,10 @@ namespace SpreadsheetUtilities
                             {
                                 throw new FormulaFormatException("Right parentheses count exceeds that of the left.")
                             }
+                            if(tokenList[i].Equals("(") || tokenList[i].isOp(tokenList[i]))
+                            {
+
+                            }
                         }
                     }
 
@@ -270,6 +274,23 @@ namespace SpreadsheetUtilities
             else
             {
                 return false;
+            }
+        }
+
+        public static bool isOp(String s)
+        {
+            switch(s)
+            {
+                case "/":
+                    return true;
+                case "*":
+                    goto case "/";
+                case "+":
+                    goto case "/";
+                case "-":
+                    goto case "/";
+                default:
+                    return false;
             }
         }
     }
