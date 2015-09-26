@@ -36,6 +36,8 @@ namespace SpreadsheetUtilities
     /// </summary>
     public class Formula
     {
+
+        List<string> tokenList;
         /// <summary>
         /// Creates a Formula from a string that consists of an infix expression written as
         /// described in the class comment.  If the expression is syntactically invalid,
@@ -74,49 +76,19 @@ namespace SpreadsheetUtilities
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
             int leftParenCount = 0, rightParenCount = 0, opCount = 0, varCount = 0, numCount = 0;
-            
-            try
-            {
-                foreach(String token in GetTokens(formula))
+            if(formula.Length > 0){
+
+                tokenList = GetTokens(formula).ToList();
+                try
                 {
-                    
-                        switch (token)
-                        {
-                            case "(":
-                                leftParenCount++;
-                                break;
-                            case ")":
-                                rightParenCount++;
-                                break;
-                            case "*":
-                                opCount++;
-                                break;
-                            case "/":
-                                goto case "*";
-                            case "+":
-                                goto case "*";
-                            case "-":
-                                goto case "*";
-                            default:
-                                if (isVar(token))
-                                {
-                                    varCount++;
-                                }
-                                else if(isNum(token))
-                                {
-                                    numCount++;
-                                }
-                                break;
-                        }
-                        if (rightParenCount > leftParenCount)
-                        {
-                            throw new FormulaFormatException("Right Parentheses Rule");
-                        }
+                    if(isVar(tokenList.First()) || isNum(tokenList.First()) || tokenList.First() == "(")
+                    {
+
+                    }
+                }catch(FormulaFormatException){
+                    //catch exception
 
                 }
-            }catch(FormulaFormatException){
-                //catch exception
-
             }
 
         }
@@ -313,4 +285,45 @@ namespace SpreadsheetUtilities
         /// </summary>
         public string Reason { get; private set; }
     }
+
+    //garbage lines(maybe)
+    //switch (token)
+    //                    {
+    //                        case "(":
+    //                            leftParenCount++;
+    //                            break;
+    //                        case ")":
+    //                            rightParenCount++;
+    //                            break;
+    //                        case "*":
+    //                            opCount++;
+    //                            break;
+    //                        case "/":
+    //                            goto case "*";
+    //                        case "+":
+    //                            goto case "*";
+    //                        case "-":
+    //                            goto case "*";
+    //                        default:
+    //                            if (isVar(token))
+    //                            {
+    //                                varCount++;
+    //                            }
+    //                            else if(isNum(token))
+    //                            {
+    //                                numCount++;
+    //                            }
+    //                            break;
+    //                    }
+
+    //                    if()
+    //                    {
+
+    //                    }
+
+    //                    if (rightParenCount > leftParenCount)
+    //                    {
+    //                        throw new FormulaFormatException("Right Parentheses Rule");
+    //                    }
+
 }

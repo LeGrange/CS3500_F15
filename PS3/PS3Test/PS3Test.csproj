@@ -54,6 +54,12 @@
     <Compile Include="FormulaTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpreadsheetUtilities\SpreadsheetUtilities.csproj">
+      <Project>{6adb7653-089c-4faa-acae-41a4c79c45cb}</Project>
+      <Name>SpreadsheetUtilities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
