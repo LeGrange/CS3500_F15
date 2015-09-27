@@ -98,11 +98,15 @@ namespace SpreadsheetUtilities
                         {
                             if (rightParen != leftParen)
                             {
-                                throw new FormulaFormatException("Right parentheses count exceeds that of the left.")
+                                throw new FormulaFormatException("Right parentheses count exceeds that of the left.");
                             }
-                            if(tokenList[i].Equals("(") || tokenList[i].isOp(tokenList[i]))
+                            if(tokenList[i].Equals("(") || isOp(tokenList[i]))
                             {
-
+                                if(!isVar(tokenList[i+1]) || !isNum(tokenList[i+1]) || !tokenList[i+1].Equals("("))
+                                {
+                                    throw new FormulaFormatException("Open Parenthese or Operater is not followed by a " + 
+                                    "variable, number or another open parenthese");
+                                }
                             }
                         }
                     }
