@@ -33,13 +33,17 @@ namespace SpreadsheetUtilities
     /// </summary>
     public class DependencyGraph
     {
-        public Dictionary<string, string> dependGraph;
+        private Dictionary<string, string> dependGraph;
+
+        private int size;
+
         /// <summary>
         /// Creates an empty DependencyGraph.
         /// </summary>
         public DependencyGraph()
         {
             dependGraph = new Dictionary<string, string>();
+            size = 0;
         }
 
 
@@ -48,7 +52,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int Size
         {
-            get { return dependGraph.Count; }
+            get { return size; }
         }
 
 
@@ -61,7 +65,18 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int this[string s]
         {
-            get { return 0; }
+            get {
+                int dependeeCount = 0;
+                foreach (KeyValuePair<String, String> these in dependGraph)
+                {
+                    if (these.Value.Contains(s))
+                    {
+                        dependeeCount++;
+                        continue;
+                    }
+                }
+                return dependeeCount;
+            }
         }
 
 
@@ -71,7 +86,8 @@ namespace SpreadsheetUtilities
         public bool HasDependents(string s)
         {
             try {
-                return true;
+                int hasDependents = dependGraph.Count<s>; 
+                return  hasDependents > 0;
             }catch(KeyNotFoundException){
                 Console.WriteLine("Key Not Found");
                 return false;
@@ -102,7 +118,13 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
-            return null;
+            try { 
+                return dependGraph.AsEnumerable<s>;
+            }
+            catch (KeyNotFoundException) { 
+                return new List<String();
+            }
+            
         }
 
         /// <summary>
@@ -126,6 +148,21 @@ namespace SpreadsheetUtilities
         /// <param name="t"> t must be evaluated first.  S depends on T</param>
         public void AddDependency(string s, string t)
         {
+            if (dependGraph.ContainsKey(s) && dependGraph[s].Contains(t))
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (dependGraph.ContainsKey(s))
+            {
+                dependGraph[s].Insert(size, t);
+                size++;
+            }
+            else if (!dependGraph.ContainsKey(s))
+            {
+                dependGraph.Add(s, t);
+                size++;
+            }
         }
 
 
@@ -136,6 +173,10 @@ namespace SpreadsheetUtilities
         /// <param name="t"></param>
         public void RemoveDependency(string s, string t)
         {
+            if (dependGraph.ContainsKey(s) && dependGraph[s].Remove(t))
+            {
+                size--;
+            }
         }
 
 
@@ -145,6 +186,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
+            
         }
 
 
