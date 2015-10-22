@@ -55,7 +55,7 @@ namespace FormulaEvaluator
                 }
                 else if (isVar(t))
                 {
-
+                    varEvaluator(t);
                 }
                 else if (isOp(t))
                 {

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using FormulaEvaluator;
 
 namespace SpreadsheetUtilities
 {
@@ -76,7 +77,6 @@ namespace SpreadsheetUtilities
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
             bool firstToken = false, lastToken = false;
-            int leftParen = 0, rightParen = 0;
             if(formula.Length > 0){
 
                 tokenList = GetTokens(formula).ToList();
@@ -131,7 +131,18 @@ namespace SpreadsheetUtilities
         /// </summary>
         public object Evaluate(Func<string, double> lookup)
         {
-            return null;
+            try
+            {
+                return Evaluator.Evaluate(this.ToString(), lookup);
+            }
+            catch (ArgumentException)
+            {
+                return new FormulaError("Error in Evaluating");
+            }
+            catch (DivideByZeroException)
+            {
+                return new FormulaError("Error: Cannot divide by zero");
+            }
         }
 
         /// <summary>
@@ -147,7 +158,15 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<String> GetVariables()
         {
-            return null;
+            HashSet<string> varSet = new HashSet<string>();
+            foreach (string t in tokenList)
+            {
+                if (Regex.IsMatch(t, @"[a-zA-Z_]([a-zA-Z_]|\d)*"))
+                {
+                    varSet.Add(t);
+                }
+            }
+            return varSet.ToList();
         }
 
         /// <summary>
@@ -188,6 +207,34 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override bool Equals(object obj)
         {
+            if (!Object.ReferenceEquals(obj, null))
+            {
+                if (obj is Formula)
+                {
+                    List<string> setTokens = new List<string>(GetTokens(obj.ToString()));
+
+                    int counter = -1;
+                    foreach (string t in setTokens)
+                    {
+                        counter++;
+
+                        double inSet = 0.0;
+                        double notSet = 0.0;
+                        if (Double.TryParse(t, out inSet) && Double.TryParse(tokenList[counter], out notSet))
+                        {
+                            if (!(inSet == notSet))
+                            {
+                                return false;
+                            }
+                        }
+                        else if (!t.Equals(tokenList[counter]))
+                        {
+                            return false;
+                        }
+                    }//end of our foreach
+                    return true;
+                }
+            }
             return false;
         }
 
